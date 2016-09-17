@@ -4,17 +4,17 @@ import numpy as np
 import loadParametersP1
 from matplotlib import pyplot as plt
 
-def grad_desc(func, d_func, init=np.zeros(2)):
-    x = init
+def grad_desc(func, d_func, criteria=0.0001):
+    x = np.array([-20.0,20.0])
     values = []
     epoch = 0
     while True:
         epoch += 1
         x -= 100 * d_func(x)
         values += [func(x)]
-        if np.linalg.norm(d_func(x)) < 0.000001:
-            print(x)
-            return epoch
+        if np.linalg.norm(d_func(x)) < criteria:
+            print(str(x) + " " + str(criteria))
+            return x
 
 gaussMean,gaussCov,quadBowlA,quadBowlb = loadParametersP1.getData()
 def gfunc(x):
@@ -38,32 +38,19 @@ def ad_qfunc(x):
     return np.array(result)
 
 pairs = [
-    (np.array([-70.0,10.0]), 'r-'),
-    (np.array([-60.0,10.0]), 'r-'),
-    (np.array([-50.0,10.0]), 'r-'),
-    (np.array([-40.0,10.0]), 'r-'),
-    (np.array([-30.0,10.0]), 'r-'),
-    (np.array([-20.0,10.0]), 'r-'),
-    (np.array([-10.0,10.0]), 'r-'),
-    (np.array([-8.0,10.0]), 'r-'),
-    (np.array([-6.0,10.0]), 'r-'),
-    (np.array([-4.0,10.0]), 'r-'),
-    (np.array([-2.0,10.0]), 'r-'),
-    (np.array([0.0,10.0]), 'r-'),
-    (np.array([2.0,10.0]), 'g-'),
-    (np.array([4.0,10.0]), 'b-'),
-    (np.array([6.0,10.0]), 'c-'),
-    (np.array([8.0,10.0]), 'm-'),
-    (np.array([10.0,10.0]), 'y-')
+    (0.00000001, 'r-'),
+    (0.0000001, 'r-'),
+    (0.000001, 'r-'),
+    (0.00001, 'r-'),
 ]
 
 y_values = []
-for pair in pairs[::-1]:
-    init, color = pair
-    val = str(list(map(int, init)))
-    y_values += [grad_desc(gfunc, d_gfunc, init=init)]
-plt.plot([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 30, 40, 50, 60, 70, 80], y_values, 'b-', label=val)
+for pair in pairs:
+    criteria, color = pair
+    result = grad_desc(gfunc, d_gfunc, criteria=criteria)
+    y_values += [np.linalg.norm(np.array([10, 10]) - result)]
+plt.plot([x for x, y in pairs], y_values, 'b-')
 plt.title('Gradient Descent: Gaussian')
-plt.xlabel('distance')
-plt.ylabel('# epochs')
+plt.xlabel('threshold')
+plt.ylabel('error')
 plt.show()
