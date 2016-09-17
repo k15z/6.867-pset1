@@ -7,9 +7,9 @@ from matplotlib import pyplot as plt
 def grad_desc(func, d_func, init=np.zeros(2)):
     x = init
     values = []
-    for epoch in range(0,6000):
+    for epoch in range(0,50000):
         x -= 100 * d_func(x)
-        values += [func(x)]
+        values += [np.linalg.norm(d_func(x))]
     print(x)
     return values
 
@@ -35,16 +35,10 @@ def ad_qfunc(x):
     return np.array(result)
 
 pairs = [
-    (np.array([-10.0,10.0]), 'r--'),
-    (np.array([-8.0,10.0]), 'g--'),
-    (np.array([-6.0,10.0]), 'b--'),
-    (np.array([-4.0,10.0]), 'c--'),
-    (np.array([-2.0,10.0]), 'm--'),
-    (np.array([0.0,10.0]), 'r-'),
-    (np.array([2.0,10.0]), 'g-'),
-    (np.array([4.0,10.0]), 'b-'),
-    (np.array([6.0,10.0]), 'c-'),
-    (np.array([8.0,10.0]), 'm-'),
+    (np.array([-40.0,10.0]), 'g-'),
+    (np.array([-20.0,10.0]), 'b-'),
+    (np.array([-10.0,10.0]), 'c-'),
+    (np.array([0.0,10.0]), 'm-'),
     (np.array([10.0,10.0]), 'y-')
 ]
 
@@ -57,5 +51,5 @@ for pair in pairs:
 plt.legend(handles=handles)
 plt.title('Gradient Descent: Gaussian')
 plt.xlabel('epoch')
-plt.ylabel('f(x)')
+plt.ylabel('norm of gradient')
 plt.show()
