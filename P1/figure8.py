@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 def grad_desc(func, d_func, stepSize, init=np.zeros(2)):
     x = init
     values = []
-    for epoch in range(0,5000):
+    for epoch in range(0,2000):
         x -= stepSize * d_func(x)
         values += [func(x)]
     print(x)
