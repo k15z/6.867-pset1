@@ -26,6 +26,7 @@ def approx_deriv(func, x, delta):
     ]
     return np.array(result)
 
-point = np.random.rand(2)
-for delta in [0.8, 0.4, 0.2, 0.1]:
-    print(np.linalg.norm(d_gfunc(point) - approx_deriv(gfunc, point, delta)))
+point = [16,5]
+print d_qfunc(point)
+for delta in [100, 10, 1, .1]:
+    print approx_deriv(qfunc, point, delta)
