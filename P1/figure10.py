@@ -21,33 +21,57 @@ def dfunci(w):
 
 def grad_desc(func, dfunc, stepSize=0.001, init=np.random.normal(size=10)):
     w = init
+    norms = []
     values = []
-    while np.linalg.norm(dfunc(w)) > 0.00001:
-        w -= stepSize * dfunc(w)
+#    while np.linalg.norm(dfunc(w)) > 0.0001:
+    for epoch in range(0, 20):
         values += [func(w)]
-        print(func(w))
-    return values
+        w -= stepSize * dfunc(w)
+        print(func(w), np.linalg.norm(dfunc(w)))
+        norms += [np.linalg.norm(dfunc(w))]
+    print(w)
+    return (values, norms)
 
 def s_grad_desc(init=np.random.normal(size=10)):
     global i
     t = 0
     w = init
+    norms = []
     values = []
-    while np.linalg.norm(dfunc(w)) > 0.00001:
+    #while np.linalg.norm(dfunc(w)) > 0.0001:
+    for epoch in range(0, 20):
         i = 0
-        stepSize = (50 + t) ** -0.75
+        stepSize = (100000 + t) ** -0.5
+        values += [func(w)]
         for _ in range(len(X)):
             w -= stepSize / len(X) * dfunci(w)
             i += 1
-        values += [func(w)]
         t += 1
-        print(t, values[-1])
-    return values
+        norms += [np.linalg.norm(dfunc(w))]
+#        print(t, values[-1], np.linalg.norm(dfunc(w)))
+    print(w)
+    return (values, norms)
 
-#y_values = grad_desc(func, dfunc)
-y_values = s_grad_desc()
-plt.plot(y_values, label="Batch")
-plt.title('Fitting Data')
+plt.figure(1)
+
+y_values1, norms1 = grad_desc(func, dfunc)
+y_values2, norms2 = s_grad_desc()
+
+plt.subplot(211)
+a, = plt.plot(y_values1, label="Batch")
+b, = plt.plot(y_values2, label="SGD")
+plt.legend(handles=[a, b])
+plt.title('Fitting Data: MSE')
 plt.xlabel('epoch')
 plt.ylabel('mse')
+
+plt.subplot(212)
+c, = plt.plot(norms1, label="Batch")
+d, = plt.plot(norms2, label="SGD")
+plt.legend(handles=[a, b])
+plt.title('Fitting Data: Gradient Norm')
+plt.xlabel('epoch')
+plt.ylabel('norm')
+
+plt.tight_layout()
 plt.show()
