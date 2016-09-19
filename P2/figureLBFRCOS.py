@@ -1,7 +1,6 @@
 import math
 import numpy as np
 import loadFittingDataP2
-from numpy.linalg import lstsq
 from matplotlib import pyplot as plt
 
 cos_order = 8
@@ -44,13 +43,15 @@ test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
 plt.plot(raw_x,test_y)
 
-# closed for least squares
-w = lstsq(x, y)[0]
+# actual solution
+w = np.zeros(8)
+w[0] = 1
+w[1] = 1.5
 print("actual", w)
 raw_x = [i/100.0 for i in range(101)]
 test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
-plt.plot(raw_x,test_y,"r--")
+plt.plot(raw_x,test_y,"g--")
 
 # original data points
 x, y = loadFittingDataP2.getData(False)
