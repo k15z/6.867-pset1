@@ -1,20 +1,21 @@
+import math
 import numpy as np
 import loadFittingDataP2
 from numpy.linalg import lstsq
 from matplotlib import pyplot as plt
 
-poly_order = 5
+cos_order = 8
 x, y = loadFittingDataP2.getData(False)
 
-def poly_basis(x, m):
+def cos_basis(x, m):
     result = []
     for x_i in x:
-        vector = [1.0]
+        vector = []
         for m_i in range(1, m + 1):
-            vector += [x_i**m_i]
+            vector += [math.cos(m_i*math.pi*x_i)]
         result += [vector]
     return np.array(result)
-x = poly_basis(x, poly_order)
+x = cos_basis(x, cos_order)
 
 def func(w):
     return np.linalg.norm(x.dot(w) - y)
@@ -27,7 +28,7 @@ def grad_desc(func, dfunc):
     gradient = dfunc(w)
     iteration = 0
     while np.linalg.norm(gradient) > 0.00001:
-        lr = 0.5
+        lr = 0.1
         w -= lr * gradient
         gradient = dfunc(w)
         if iteration % 100000 == 0:
@@ -35,18 +36,19 @@ def grad_desc(func, dfunc):
         iteration += 1
     return w
 w = grad_desc(func, dfunc)
-print(w)
+print("approx", w)
 
 # gradient descent least squares
 raw_x = [i/100.0 for i in range(101)]
-test_x = poly_basis(raw_x, poly_order)
+test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
 plt.plot(raw_x,test_y)
 
 # closed for least squares
 w = lstsq(x, y)[0]
+print("actual", w)
 raw_x = [i/100.0 for i in range(101)]
-test_x = poly_basis(raw_x, poly_order)
+test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
 plt.plot(raw_x,test_y,"r--")
 
