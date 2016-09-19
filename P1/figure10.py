@@ -26,11 +26,10 @@ def grad_desc(func, dfunc, stepSize=0.001, init=np.random.normal(size=10)):
 #    while np.linalg.norm(dfunc(w)) > 0.0001:
     for epoch in range(0, 20):
         values += [func(w)]
-        w -= stepSize * dfunc(w)
-        print(func(w), np.linalg.norm(dfunc(w)))
         norms += [np.linalg.norm(dfunc(w))]
-    print(w)
-    return (values, norms)
+        w -= stepSize * dfunc(w)
+#        print(func(w), np.linalg.norm(dfunc(w)))
+    return (values, norms, w)
 
 def s_grad_desc(init=np.random.normal(size=10)):
     global i
@@ -43,19 +42,19 @@ def s_grad_desc(init=np.random.normal(size=10)):
         i = 0
         stepSize = (100000 + t) ** -0.5
         values += [func(w)]
+        norms += [np.linalg.norm(dfunc(w))]
         for _ in range(len(X)):
             w -= stepSize / len(X) * dfunci(w)
             i += 1
         t += 1
-        norms += [np.linalg.norm(dfunc(w))]
 #        print(t, values[-1], np.linalg.norm(dfunc(w)))
     print(w)
-    return (values, norms)
+    return (values, norms, w)
 
 plt.figure(1)
 
-y_values1, norms1 = grad_desc(func, dfunc)
-y_values2, norms2 = s_grad_desc()
+y_values1, norms1, _ = grad_desc(func, dfunc)
+y_values2, norms2, _ = s_grad_desc()
 
 plt.subplot(211)
 a, = plt.plot(y_values1, label="Batch")
