@@ -37,11 +37,12 @@ def grad_desc(func, dfunc):
 w = grad_desc(func, dfunc)
 print("approx", w)
 
+"""
 # gradient descent least squares
 raw_x = [i/100.0 for i in range(101)]
 test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
-plt.plot(raw_x,test_y)
+a, = plt.plot(raw_x,test_y, label="Predicted")
 
 # actual solution
 w = np.zeros(8)
@@ -51,10 +52,15 @@ print("actual", w)
 raw_x = [i/100.0 for i in range(101)]
 test_x = cos_basis(raw_x, cos_order)
 test_y = test_x.dot(w)
-plt.plot(raw_x,test_y,"g--")
+b, = plt.plot(raw_x,test_y,"g--",label="Actual")
 
 # original data points
 x, y = loadFittingDataP2.getData(False)
 plt.scatter(x, y)
 
+plt.legend(handles=[a, b])
+plt.title('Fitting Data: Cosine Basis')
+plt.xlabel('x')
+plt.ylabel('y')
 plt.show()
+"""
