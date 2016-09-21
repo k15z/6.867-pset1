@@ -3,6 +3,7 @@ import lassoData
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.linear_model import Lasso
+from sklearn.linear_model import Ridge
 
 val_x, val_y = lassoData.lassoValData()
 test_x, test_y = lassoData.lassoTestData()
@@ -25,18 +26,34 @@ def ridge_regression(x, y, c):
     return (w, u)
 
 
-clf = Lasso(alpha=0.01)
+plt.figure(figsize=(12, 9))
+
+clf = Lasso(alpha=0.1)
 clf.fit(transform(train_x), train_y)
 fake_x = np.array([i/100.0 for i in range(-100, 100)])
 fake_y = clf.predict(transform(fake_x))
+aa, = plt.plot(fake_x, fake_y, label="LASSO (0.1)")
 
-plt.figure(figsize=(12, 9))
-aa, = plt.plot(fake_x, fake_y, label="LASSO")
+clf = Ridge(alpha=0.1)
+clf.fit(transform(train_x), train_y)
+fake_x = np.array([i/100.0 for i in range(-100, 100)])
+fake_y = clf.predict(transform(fake_x))
+bb, = plt.plot(fake_x, fake_y, label="Ridge (0.1)")
 
-a = plt.scatter(train_x, train_y, color='r', label="Training")
+clf = Lasso(alpha=0.0)
+clf.fit(transform(train_x), train_y)
+fake_x = np.array([i/100.0 for i in range(-100, 100)])
+fake_y = clf.predict(transform(fake_x))
+cc, = plt.plot(fake_x, fake_y, label="Unregularized")
+
+fake_x = np.array([i/100.0 for i in range(-100, 100)])
+fake_y = transform(fake_x).dot(np.loadtxt('lasso_true_w.txt'))
+dd, = plt.plot(fake_x, fake_y, 'c--', label="Actual")
+
+a = plt.scatter(train_x, train_y, color='b', label="Training")
 b = plt.scatter(test_x, test_y, color='g', label="Testing")
-c = plt.scatter(val_x, val_y, color='b', label="Validation")
-plt.legend(handles=[a, b, c, aa], loc=2)
+c = plt.scatter(val_x, val_y, color='r', label="Validation")
+plt.legend(handles=[a, b, c, aa, bb, cc, dd], loc=2)
 plt.xlabel('x')
 plt.ylabel('y')
 plt.savefig(__file__.split('/')[-1] + '.png')

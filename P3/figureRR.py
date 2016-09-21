@@ -1,7 +1,6 @@
 import numpy as np
 import regressData
 from matplotlib import pyplot as plt
-from sklearn.linear_model import Ridge
 
 def poly_basis(x, m):
     result = []
@@ -12,7 +11,7 @@ def poly_basis(x, m):
         result += [vector]
     return np.array(result)
 
-order = 10
+order = 13
 ax, ay = regressData.regressAData()
 bx, by = regressData.regressBData()
 vx, vy = regressData.validateData()
@@ -25,16 +24,10 @@ def ridge_regression(x, y, c):
     w = np.linalg.inv(z.transpose().dot(z) + reg).dot(z.transpose()).dot(y)
     return (w, u)
 
-w, u = ridge_regression(poly_basis(ax, order), ay, 0.1)
-sx = np.linspace(-2.5,2.5,10000)
+w, u = ridge_regression(poly_basis(ax, order), ay, 1000.0001)
+sx = np.linspace(-2.9,2.45,10000)
 sy = (poly_basis(sx, order) - u).dot(w)
 plt.plot(sx, sy)
-
-clf = Ridge(alpha=0.1)
-clf.fit(poly_basis(ax, order), ay) 
-sx = np.linspace(-2.7,2.3,10000)
-sy = clf.predict(poly_basis(sx, order))
-plt.plot(sx, sy, 'g--')
 
 plt.scatter(ax, ay, color='b')
 plt.scatter(bx, by, color='r')
