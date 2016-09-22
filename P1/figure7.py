@@ -4,12 +4,12 @@ import numpy as np
 import loadParametersP1
 from matplotlib import pyplot as plt
 
-def grad_desc(func, d_func, stepSize, init=np.zeros(2)):
+def grad_desc(func, d_func, init=np.zeros(2)):
     x = init
     values = []
-    for epoch in range(0,5000):
-        x -= stepSize * d_func(x)
-        values += [func(x)]
+    for epoch in range(0,100):
+        x -= .01 * d_func(x)
+        values += [np.linalg.norm(d_func(x))]
     print(x)
     return values
 
@@ -35,20 +35,21 @@ def ad_qfunc(x):
     return np.array(result)
 
 pairs = [
-    (.0001, 'r-'),
-    (.001, 'g-'),
-    (.01, 'b-'),
-    (.1, 'm-')
+    (np.array([-40.0,10.0]), 'g-'),
+    (np.array([-20.0,10.0]), 'b-'),
+    (np.array([-10.0,10.0]), 'c-'),
+    (np.array([0.0,10.0]), 'm-'),
+    (np.array([10.0,10.0]), 'y-')
 ]
 
 handles = []
 for pair in pairs:
-    stepSize, color = pair
-    val = str(stepSize)
-    y_values = grad_desc(qfunc, d_qfunc, stepSize, init=[-10,10])
+    init, color = pair
+    val = str(list(map(int, init)))
+    y_values = grad_desc(qfunc, d_qfunc, init=init)
     handles += [plt.plot(y_values, color, label=val)[0]]
 plt.legend(handles=handles)
 plt.title('Gradient Descent: Quadratic')
 plt.xlabel('epoch')
-plt.ylabel('f(x)')
+plt.ylabel('norm of gradient')
 plt.show()

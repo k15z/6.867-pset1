@@ -4,14 +4,17 @@ import numpy as np
 import loadParametersP1
 from matplotlib import pyplot as plt
 
-def grad_desc(func, d_func, init=np.zeros(2)):
-    x = init
+def grad_desc(func, d_func, criteria=0.0001):
+    x = np.array([-20.0,20.0])
     values = []
-    for epoch in range(0,6000):
-        x -= .0001 * d_func(x)
+    epoch = 0
+    while True:
+        epoch += 1
+        x -= 100 * d_func(x)
         values += [func(x)]
-    print(x)
-    return values
+        if np.linalg.norm(d_func(x)) < criteria:
+            print(str(x) + " " + str(criteria))
+            return x
 
 gaussMean,gaussCov,quadBowlA,quadBowlb = loadParametersP1.getData()
 def gfunc(x):
@@ -35,28 +38,19 @@ def ad_qfunc(x):
     return np.array(result)
 
 pairs = [
-    (np.array([6.66,26.66]), 'r--'),
-    (np.array([8.66,26.66]), 'g--'),
-    (np.array([10.66,26.66]), 'b--'),
-    (np.array([12.66,26.66]), 'c--'),
-    (np.array([14.66,26.66]), 'm--'),
-    (np.array([16.66,26.66]), 'r-'),
-    (np.array([18.66,26.66]), 'g-'),
-    (np.array([20.66,26.66]), 'b-'),
-    (np.array([22.66,26.66]), 'c-'),
-    (np.array([24.66,26.66]), 'm-'),
-    (np.array([26.66,26.66]), 'y-')
+    (0.00000001, 'r-'),
+    (0.0000001, 'r-'),
+    (0.000001, 'r-'),
+    (0.00001, 'r-'),
 ]
 
-handles = []
+y_values = []
 for pair in pairs:
-    init, color = pair
-    val = str(list(map(int, init)))
-    y_values = grad_desc(qfunc, d_qfunc, init=init)
-    handles += [plt.plot(y_values, color, label=val)[0]]
-plt.legend(handles=handles)
-plt.title('Gradient Descent: Quadratic')
-plt.xlabel('epoch')
-plt.ylabel('f(x)')
+    criteria, color = pair
+    result = grad_desc(gfunc, d_gfunc, criteria=criteria)
+    y_values += [np.linalg.norm(np.array([10, 10]) - result)]
+plt.plot([x for x, y in pairs], y_values, 'b-')
+plt.title('Gradient Descent: Gaussian')
+plt.xlabel('threshold')
+plt.ylabel('error')
 plt.show()
-

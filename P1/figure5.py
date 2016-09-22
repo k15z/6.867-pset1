@@ -7,13 +7,11 @@ from matplotlib import pyplot as plt
 def grad_desc(func, d_func, init=np.zeros(2)):
     x = init
     values = []
-    epoch = 0
-    while True:
-        epoch += 1
-        x -= 0.0001 * d_func(x)
+    for epoch in range(0,6000):
+        x -= .0001 * d_func(x)
         values += [func(x)]
-        if np.linalg.norm(d_func(x)) < 0.00001:
-            return epoch
+    print(x)
+    return values
 
 gaussMean,gaussCov,quadBowlA,quadBowlb = loadParametersP1.getData()
 def gfunc(x):
@@ -37,32 +35,28 @@ def ad_qfunc(x):
     return np.array(result)
 
 pairs = [
-    (np.array([-70.0,10.0]), 'r-'),
-    (np.array([-60.0,10.0]), 'r-'),
-    (np.array([-50.0,10.0]), 'r-'),
-    (np.array([-40.0,10.0]), 'r-'),
-    (np.array([-30.0,10.0]), 'r-'),
-    (np.array([-20.0,10.0]), 'r-'),
-    (np.array([-10.0,10.0]), 'r-'),
-    (np.array([-8.0,10.0]), 'r-'),
-    (np.array([-6.0,10.0]), 'r-'),
-    (np.array([-4.0,10.0]), 'r-'),
-    (np.array([-2.0,10.0]), 'r-'),
-    (np.array([0.0,10.0]), 'r-'),
-    (np.array([2.0,10.0]), 'g-'),
-    (np.array([4.0,10.0]), 'b-'),
-    (np.array([6.0,10.0]), 'c-'),
-    (np.array([8.0,10.0]), 'm-'),
-    (np.array([10.0,10.0]), 'y-')
+    (np.array([6.66,26.66]), 'r--'),
+    (np.array([8.66,26.66]), 'g--'),
+    (np.array([10.66,26.66]), 'b--'),
+    (np.array([12.66,26.66]), 'c--'),
+    (np.array([14.66,26.66]), 'm--'),
+    (np.array([16.66,26.66]), 'r-'),
+    (np.array([18.66,26.66]), 'g-'),
+    (np.array([20.66,26.66]), 'b-'),
+    (np.array([22.66,26.66]), 'c-'),
+    (np.array([24.66,26.66]), 'm-'),
+    (np.array([26.66,26.66]), 'y-')
 ]
 
-y_values = []
-for pair in pairs[::-1]:
+handles = []
+for pair in pairs:
     init, color = pair
     val = str(list(map(int, init)))
-    y_values += [grad_desc(qfunc, d_qfunc, init=init)]
-plt.plot([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 30, 40, 50, 60, 70, 80], y_values, 'b-', label=val)
+    y_values = grad_desc(qfunc, d_qfunc, init=init)
+    handles += [plt.plot(y_values, color, label=val)[0]]
+plt.legend(handles=handles)
 plt.title('Gradient Descent: Quadratic')
-plt.xlabel('distance')
-plt.ylabel('# epochs')
+plt.xlabel('epoch')
+plt.ylabel('f(x)')
 plt.show()
+
