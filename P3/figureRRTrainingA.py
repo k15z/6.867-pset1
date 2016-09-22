@@ -11,8 +11,8 @@ def poly_basis(x, m):
         result += [vector]
     return np.array(result)
 
-bx, by = regressData.regressAData()
-ax, ay = regressData.regressBData()
+ax, ay = regressData.regressAData()
+bx, by = regressData.regressBData()
 vx, vy = regressData.validateData()
 
 def ridge_regression(x, y, c):
@@ -23,8 +23,8 @@ def ridge_regression(x, y, c):
     w = np.linalg.inv(z.transpose().dot(z) + reg).dot(z.transpose()).dot(y)
     return (w, u)
 
-for i in [.5, .6, .7, .8, .9, 1, 2,3,4,5]:
-    for m in [3]:
+for i in [10, 100, 1000]:
+    for m in range(10, 15):
         order = m
         w, u = ridge_regression(poly_basis(ax, order), ay, i)
         sx = np.linspace(-2.9,2.45,10000)
