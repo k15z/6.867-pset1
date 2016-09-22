@@ -11,7 +11,6 @@ def poly_basis(x, m):
         result += [vector]
     return np.array(result)
 
-order = 13
 ax, ay = regressData.regressAData()
 bx, by = regressData.regressBData()
 vx, vy = regressData.validateData()
@@ -24,12 +23,27 @@ def ridge_regression(x, y, c):
     w = np.linalg.inv(z.transpose().dot(z) + reg).dot(z.transpose()).dot(y)
     return (w, u)
 
-w, u = ridge_regression(poly_basis(ax, order), ay, 1000.0001)
-sx = np.linspace(-2.9,2.45,10000)
-sy = (poly_basis(sx, order) - u).dot(w)
-plt.plot(sx, sy)
+lambdas = [.00001, .0001, .001, .01, .1, 1, 10]
+for i in lambdas:
+    for m in range(1, 13):
+        order = m
+        w, u = ridge_regression(poly_basis(ax, order), ay, i)
+        sx = np.linspace(-2.9,2.45,10000)
+        sy = (poly_basis(sx, order) - u).dot(w)
+        #plt.plot(sx, sy)
+        print ("Lambda",i,"Order",m)
+        ay_predicted_wathetoeush = (poly_basis(ax, order) - u).dot(w)
+        print ("traing error" , np.linalg.norm(ay_predicted_wathetoeush - ay))
+        vy_predicted_wathetoeush = (poly_basis(vx, order) - u).dot(w)
+        print ("val error" , np.linalg.norm(vy_predicted_wathetoeush - vy))
+        by_predicted_wathetoeush = (poly_basis(bx, order) - u).dot(w)
+        print ("potato error" , np.linalg.norm(by_predicted_wathetoeush - by))
+        print ("")
 
-plt.scatter(ax, ay, color='b')
-plt.scatter(bx, by, color='r')
-plt.scatter(vx, vy, color='g')
-plt.show()
+#plt.scatter(ax, ay, color='b')
+#plt.scatter(bx, by, color='r')
+#plt.scatter(vx, vy, color='g')
+
+#plt.show()
+
+
