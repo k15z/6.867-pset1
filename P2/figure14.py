@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 i = 0
 bs = 1
-poly_order = 3
+poly_order = 1
 x, y = loadFittingDataP2.getData(False)
 
 def poly_basis(x, m):

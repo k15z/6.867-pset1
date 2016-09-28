@@ -26,7 +26,7 @@ def ridge_regression(x, y, c):
     return (w, u)
 
 
-plt.figure(figsize=(12, 9))
+plt.figure(figsize=(9, 5))
 
 clf = Lasso(alpha=0.1)
 clf.fit(transform(train_x), train_y)
@@ -56,4 +56,5 @@ c = plt.scatter(val_x, val_y, color='r', label="Validation")
 plt.legend(handles=[a, b, c, aa, bb, cc, dd], loc=2)
 plt.xlabel('x')
 plt.ylabel('y')
+plt.tight_layout()
 plt.savefig(__file__.split('/')[-1] + '.png')

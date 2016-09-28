@@ -27,7 +27,7 @@ def grad_desc(func, dfunc, stepSize=0.001):
     norms = []
     values = []
 #    while np.linalg.norm(dfunc(w)) > 0.0001:
-    for epoch in range(0, 8):
+    for epoch in range(0, 10):
         values += [func(w)]
         norms += [np.linalg.norm(dfunc(w))]
         w -= stepSize * dfunc(w)
@@ -41,7 +41,7 @@ def s_grad_desc():
     norms = []
     values = []
     #while np.linalg.norm(dfunc(w)) > 0.0001:
-    for epoch in range(0, 8):
+    for epoch in range(0, int(1*bs)):
         i = 0
         stepSize = (100000 + t) ** -0.5
         values += [func(w)]
@@ -49,6 +49,7 @@ def s_grad_desc():
         for _ in range(int(len(X)/bs)):
             w -= stepSize * bs / len(X) * dfunci(w)
             i += bs
+            values += [func(w)]
         t += 1
 #        print(t, values[-1], np.linalg.norm(dfunc(w)))
     print(w)
@@ -56,6 +57,7 @@ def s_grad_desc():
 
 plt.figure(1)
 
+bs = 100.0
 y_values1, norms1, _ = grad_desc(func, dfunc)
 
 bs = 50.0
@@ -68,11 +70,11 @@ bs = 1.0
 y_values4, norms4, _ = s_grad_desc()
 
 if True:
-    a, = plt.plot(y_values1, label="Batch (100)")
-    b, = plt.plot(y_values2, label="Mini (50)")
-    c, = plt.plot(y_values3, label="Mini (20)")
-    d, = plt.plot(y_values4, label="SGD (1)")
-    plt.legend(handles=[a, b, c, d])
+#    a, = plt.plot(y_values1[:], label="Batch (100)")
+    b, = plt.plot(y_values2[:100], label="Mini (50)")
+    c, = plt.plot(y_values3[:100], label="Mini (20)")
+    d, = plt.plot(y_values4[:100], label="SGD (1)")
+    plt.legend(handles=[b, c, d])
     plt.title('Fitting Data: MSE')
     plt.xlabel('epoch')
     plt.ylabel('mse')

@@ -23,7 +23,7 @@ x, y = loadFittingDataP2.getData(False)
 for m in [2, 10]:
     plt.figure()
     handles = []
-    for i in [0.0000000001, 0.01, 1.0]:
+    for i in [0.0000000001, 0.05, 1.0]:
         order = m
         w, u = ridge_regression(poly_basis(x, order), y, i)
         sx = np.linspace(0.0,1.0,100)

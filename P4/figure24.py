@@ -28,7 +28,7 @@ def ridge_regression(x, y, c):
 
 width = 0.9
 
-plt.figure(figsize=(15, 5))
+plt.figure(figsize=(15, 3))
 coefs = np.loadtxt('lasso_true_w.txt')
 a = plt.bar(np.array(range(len(coefs)))+width*0/4, coefs, width/4, color='g', label="Actual")
 
@@ -48,3 +48,4 @@ plt.ylabel('value')
 plt.xlabel('coefficient')
 plt.xticks(range(len(coefs)))
 plt.legend([a[0], b[0], c[0], d[0]], ["Actual","Lasso", "Ridge", "Unregularized"])
+plt.tight_layout()
